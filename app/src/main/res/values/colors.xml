@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Material 3 Festive Palette -->
+    <!-- Primary: Saffron / Deep Orange -->
+    <color name="primary">#FF6D00</color>
+    <color name="on_primary">#FFFFFF</color>
+    <color name="primary_container">#FFE0B2</color>
+    <color name="on_primary_container">#3E1500</color>
+
+    <!-- Secondary: Royal Gold Accent -->
+    <color name="secondary">#FFD600</color>
+    <color name="on_secondary">#000000</color>
+    <color name="secondary_container">#FFF9C4</color>
+    <color name="on_secondary_container">#3D3000</color>
+
+    <!-- Tertiary: Dark Maroon Festive -->
+    <color name="tertiary">#5B061A</color>
+    <color name="on_tertiary">#FFFFFF</color>
+    <color name="tertiary_container">#FFD9DF</color>
+    <color name="on_tertiary_container">#3B000E</color>
+
+    <!-- Background and Surfaces -->
+    <color name="background_light">#FFF8F5</color>
+    <color name="on_background">#211A16</color>
+    <color name="surface_light">#FFFFFF</color>
+    <color name="on_surface">#211A16</color>
+    <color name="surface_variant">#F5E0D7</color>
+    <color name="on_surface_variant">#53433B</color>
+    <color name="outline">#85736B</color>
+
+    <!-- Generic & Launcher colors -->
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+    <color name="dark_maroon">#5B061A</color>
+    <color name="royal_gold">#FFD600</color>
+    <color name="saffron_orange">#FF6D00</color>
+    <color name="divider">#E0D5CE</color>
+    <color name="text_primary">#211A16</color>
+    <color name="text_secondary">#6E645F</color>
+</resources>

@@ -1,0 +1,535 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_light">
+
+    <!-- Top AppBar -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/surface_light"
+        app:elevation="2dp">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIconTint="@color/primary"
+            app:title="पोस्टर कस्टमाइज़ करें"
+            app:titleTextColor="@color/text_primary"
+            app:titleTextAppearance="@style/TextAppearance.Material3.TitleMedium">
+
+            <!-- Profile Edit Shortcut Button in Toolbar -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEditProfileHeader"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="8dp"
+                android:text="My Profile"
+                android:textColor="@color/primary"
+                android:textSize="12sp"
+                app:icon="@drawable/ic_camera_edit"
+                app:iconSize="16dp"
+                app:iconTint="@color/primary" />
+        </com.google.android.material.appbar.MaterialToolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Main Content Area: Scrollable Canvas + Controls -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="16dp">
+
+            <!-- Poster Canvas Card (4:5 Aspect Ratio) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardCanvasWrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp"
+                app:strokeColor="#22000000"
+                app:strokeWidth="1dp">
+
+                <!-- MAIN EXPORTABLE POSTER CANVAS -->
+                <FrameLayout
+                    android:id="@+id/posterCanvas"
+                    android:layout_width="match_parent"
+                    android:layout_height="390dp">
+
+                    <!-- 1. Background Gradient Layer -->
+                    <View
+                        android:id="@+id/canvasBgGradient"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                    <!-- 2. Background Image Backdrop -->
+                    <ImageView
+                        android:id="@+id/canvasBgImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="Poster Photo"
+                        android:scaleType="centerCrop"
+                        android:visibility="gone" />
+
+                    <!-- 3. Contrast Scrim Overlay -->
+                    <View
+                        android:id="@+id/canvasScrim"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="#26000000" />
+
+                    <!-- 4. Toggleable Decorative Border Frame -->
+                    <View
+                        android:id="@+id/borderFrame"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="8dp"
+                        android:background="@drawable/ic_launcher_background"
+                        android:backgroundTint="#00000000"
+                        android:visibility="gone" />
+
+                    <!-- 5. Draggable & Editable Quote / Wish Text -->
+                    <TextView
+                        android:id="@+id/tvQuote"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:lineSpacingExtra="4dp"
+                        android:padding="16dp"
+                        android:shadowColor="#99000000"
+                        android:shadowDx="1"
+                        android:shadowDy="2"
+                        android:shadowRadius="4"
+                        android:text="शुभ दीपावली!\nसुख, शांति और समृद्धि आपके घर आए।"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <!-- 6. Watermark Badge (Removable via Rewarded Ad) -->
+                    <LinearLayout
+                        android:id="@+id/watermarkBadge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top|end"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@drawable/ic_launcher_background"
+                        android:backgroundTint="#99000000"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingStart="8dp"
+                        android:paddingTop="3dp"
+                        android:paddingEnd="8dp"
+                        android:paddingBottom="3dp">
+
+                        <ImageView
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:layout_marginEnd="4dp"
+                            android:contentDescription="Watermark"
+                            android:src="@drawable/ic_pro_badge" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="UtsavPost"
+                            android:textColor="@color/white"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <!-- 7. Bottom User Footer Container -->
+                    <FrameLayout
+                        android:id="@+id/footerContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom">
+
+                        <!-- Style 1: Classic Bottom Ribbon -->
+                        <LinearLayout
+                            android:id="@+id/footerStyle1"
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:background="#E6FFFFFF"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/ivUserPhoto1"
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/ic_person_placeholder"
+                                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+                                app:strokeColor="@color/primary"
+                                app:strokeWidth="1.5dp" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tvUserName1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:ellipsize="end"
+                                    android:maxLines="1"
+                                    android:textColor="#212121"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    tools:text="आपका नाम यहाँ" />
+
+                                <TextView
+                                    android:id="@+id/tvUserDesignation1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:ellipsize="end"
+                                    android:maxLines="1"
+                                    android:textColor="@color/primary"
+                                    android:textSize="10sp"
+                                    android:textStyle="bold"
+                                    tools:text="समाजसेवी / युवा नेता" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <!-- Style 2: Modern Dark Floating Pill -->
+                        <LinearLayout
+                            android:id="@+id/footerStyle2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="46dp"
+                            android:layout_gravity="center_horizontal|bottom"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/ic_launcher_background"
+                            android:backgroundTint="#EB1A1A1A"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingStart="6dp"
+                            android:paddingEnd="14dp"
+                            android:visibility="gone">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/ivUserPhoto2"
+                                android:layout_width="34dp"
+                                android:layout_height="34dp"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/ic_person_placeholder"
+                                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+                                app:strokeColor="#FFD700"
+                                app:strokeWidth="1.5dp" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tvUserName2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:ellipsize="end"
+                                    android:maxLines="1"
+                                    android:textColor="#FFFFFF"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    tools:text="आपका नाम यहाँ" />
+
+                                <TextView
+                                    android:id="@+id/tvUserDesignation2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:ellipsize="end"
+                                    android:maxLines="1"
+                                    android:textColor="#FFD700"
+                                    android:textSize="10sp"
+                                    tools:text="समाजसेवी / युवा नेता" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <!-- Style 3: VIP / Political Right-Side Photo Banner -->
+                        <LinearLayout
+                            android:id="@+id/footerStyle3"
+                            android:layout_width="match_parent"
+                            android:layout_height="52dp"
+                            android:background="#EBFF6D00"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="8dp"
+                            android:visibility="gone">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tvUserName3"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:ellipsize="end"
+                                    android:maxLines="1"
+                                    android:textColor="#FFFFFF"
+                                    android:textSize="13sp"
+                                    android:textStyle="bold"
+                                    tools:text="आपका नाम यहाँ" />
+
+                                <TextView
+                                    android:id="@+id/tvUserDesignation3"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:ellipsize="end"
+                                    android:maxLines="1"
+                                    android:textColor="#FFF9C4"
+                                    android:textSize="10sp"
+                                    android:textStyle="bold"
+                                    tools:text="समाजसेवी / युवा नेता" />
+                            </LinearLayout>
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/ivUserPhoto3"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/ic_person_placeholder"
+                                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+                                app:strokeColor="#FFFFFF"
+                                app:strokeWidth="2dp" />
+                        </LinearLayout>
+
+                    </FrameLayout>
+
+                </FrameLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Hint: Drag to move text -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="8dp"
+                android:text="💡 संदेश को टैप कर बदलें या उंगली से ड्रैग कर कहीं भी रखें"
+                android:textColor="@color/text_secondary"
+                android:textSize="11sp" />
+
+            <!-- Row 1: Editing Controls (Horizontal Scroll) -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:overScrollMode="never"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnEditText"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="42dp"
+                        android:layout_marginEnd="6dp"
+                        android:text="Edit Text"
+                        android:textSize="12sp"
+                        app:icon="@drawable/ic_text_fields"
+                        app:iconSize="16dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnTextColor"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="42dp"
+                        android:layout_marginEnd="6dp"
+                        android:text="Text Color"
+                        android:textSize="12sp"
+                        app:icon="@drawable/ic_palette"
+                        app:iconSize="16dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnTextSize"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="42dp"
+                        android:layout_marginEnd="6dp"
+                        android:text="Text Size"
+                        android:textSize="12sp"
+                        app:icon="@drawable/ic_text_fields"
+                        app:iconSize="16dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnBgColor"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="42dp"
+                        android:layout_marginEnd="6dp"
+                        android:text="BG Colors"
+                        android:textSize="12sp"
+                        app:icon="@drawable/ic_palette"
+                        app:iconSize="16dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnPickBgPhoto"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="42dp"
+                        android:layout_marginEnd="6dp"
+                        android:text="BG Photo"
+                        android:textSize="12sp"
+                        app:icon="@drawable/ic_camera_edit"
+                        app:iconSize="16dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnToggleBorder"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="42dp"
+                        android:layout_marginEnd="6dp"
+                        android:text="Frame Border"
+                        android:textSize="12sp"
+                        app:icon="@drawable/ic_frame_border"
+                        app:iconSize="16dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnFooterStyle"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="42dp"
+                        android:layout_marginEnd="6dp"
+                        android:text="Footer Style"
+                        android:textSize="12sp"
+                        app:icon="@drawable/ic_footer_style"
+                        app:iconSize="16dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnChangeMyPhoto"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="42dp"
+                        android:text="My Photo"
+                        android:textSize="12sp"
+                        app:icon="@drawable/ic_person_placeholder"
+                        app:iconSize="16dp" />
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <!-- Prominent Button: Remove Watermark (Watch Ad) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRemoveWatermark"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="12dp"
+                android:backgroundTint="#FFF3E0"
+                android:text="🎬 Remove Watermark (Watch Ad)"
+                android:textColor="#E65100"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                app:cornerRadius="12dp"
+                app:icon="@drawable/ic_ad_reward"
+                app:iconTint="#E65100"
+                app:strokeColor="#FFB74D"
+                app:strokeWidth="1dp" />
+
+            <!-- Action Buttons: Save & Share -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="12dp"
+                android:orientation="horizontal">
+
+                <!-- Save HD Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSave"
+                    android:layout_width="0dp"
+                    android:layout_height="52dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1.2"
+                    android:backgroundTint="@color/primary"
+                    android:text="Save HD"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="12dp"
+                    app:icon="@drawable/ic_download"
+                    app:iconSize="18dp" />
+
+                <!-- WhatsApp Share Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnShareWhatsApp"
+                    android:layout_width="0dp"
+                    android:layout_height="52dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1.4"
+                    android:backgroundTint="#25D366"
+                    android:text="WhatsApp"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="12dp"
+                    app:icon="@drawable/ic_whatsapp"
+                    app:iconSize="18dp" />
+
+                <!-- More Share Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnShareMore"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="52dp"
+                    android:layout_weight="1"
+                    android:text="Share"
+                    android:textColor="@color/text_primary"
+                    android:textSize="13sp"
+                    app:cornerRadius="12dp"
+                    app:icon="@drawable/ic_share"
+                    app:iconSize="18dp"
+                    app:iconTint="@color/text_primary" />
+            </LinearLayout>
+
+            <!-- Bottom AdMob Banner Container -->
+            <FrameLayout
+                android:id="@+id/bannerAdContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="@color/surface_light"
+                android:minHeight="50dp" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
