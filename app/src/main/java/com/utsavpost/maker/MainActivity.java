@@ -95,36 +95,44 @@ public class MainActivity extends AppCompatActivity {
     private void setupFilterChips() {
         // Language Filter Selection
         binding.chipGroupLanguage.setOnCheckedStateChangeListener((group, checkedIds) -> {
-            if (checkedIds.isEmpty()) return;
-            int checkedId = checkedIds.get(0);
-            if (checkedId == R.id.chipLangHindi) {
-                selectedLanguage = "Hindi";
-            } else if (checkedId == R.id.chipLangBhojpuri) {
-                selectedLanguage = "Bhojpuri";
-            } else if (checkedId == R.id.chipLangMarathi) {
-                selectedLanguage = "Marathi";
-            } else {
+            if (checkedIds.isEmpty()) {
                 selectedLanguage = "All";
+                binding.chipLangAll.setChecked(true);
+            } else {
+                int checkedId = checkedIds.get(0);
+                if (checkedId == R.id.chipLangHindi) {
+                    selectedLanguage = "Hindi";
+                } else if (checkedId == R.id.chipLangBhojpuri) {
+                    selectedLanguage = "Bhojpuri";
+                } else if (checkedId == R.id.chipLangMarathi) {
+                    selectedLanguage = "Marathi";
+                } else {
+                    selectedLanguage = "All";
+                }
             }
             applyFilters();
         });
 
         // Category Filter Selection
         binding.chipGroupCategory.setOnCheckedStateChangeListener((group, checkedIds) -> {
-            if (checkedIds.isEmpty()) return;
-            int checkedId = checkedIds.get(0);
-            if (checkedId == R.id.chipCatFestival) {
-                selectedCategory = "Festival";
-            } else if (checkedId == R.id.chipCatBirthday) {
-                selectedCategory = "Birthday";
-            } else if (checkedId == R.id.chipCatShayari) {
-                selectedCategory = "Shayari";
-            } else if (checkedId == R.id.chipCatSuvichar) {
-                selectedCategory = "Suvichar";
-            } else if (checkedId == R.id.chipCatPolitical) {
-                selectedCategory = "Political/Social";
-            } else {
+            if (checkedIds.isEmpty()) {
                 selectedCategory = "All";
+                binding.chipCatAll.setChecked(true);
+            } else {
+                int checkedId = checkedIds.get(0);
+                if (checkedId == R.id.chipCatFestival) {
+                    selectedCategory = "Festival";
+                } else if (checkedId == R.id.chipCatBirthday) {
+                    selectedCategory = "Birthday";
+                } else if (checkedId == R.id.chipCatShayari) {
+                    selectedCategory = "Shayari";
+                } else if (checkedId == R.id.chipCatSuvichar) {
+                    selectedCategory = "Suvichar";
+                } else if (checkedId == R.id.chipCatPolitical) {
+                    selectedCategory = "Political/Social";
+                } else {
+                    selectedCategory = "All";
+                }
             }
             applyFilters();
         });
@@ -171,46 +179,66 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadTemplates() {
         allTemplates = templateRepository.loadTemplates(this);
+        if (allTemplates == null || allTemplates.isEmpty()) {
+            allTemplates = TemplateRepository.getDefaultFallbackTemplates();
+        }
         applyFilters();
 
         // Optionally check for remote updates in background
         templateRepository.fetchRemoteTemplates(this, "", new TemplateRepository.Callback() {
             @Override
             public void onSuccess(List<TemplateModel> templates) {
-                allTemplates = templates;
-                applyFilters();
+                if (templates != null && !templates.isEmpty()) {
+                    allTemplates = templates;
+                    applyFilters();
+                }
             }
 
             @Override
             public void onError(Throwable throwable, List<TemplateModel> fallbackTemplates) {
-                // Silently keep local templates
+                if (allTemplates == null || allTemplates.isEmpty()) {
+                    if (fallbackTemplates != null && !fallbackTemplates.isEmpty()) {
+                        allTemplates = fallbackTemplates;
+                    } else {
+                        allTemplates = TemplateRepository.getDefaultFallbackTemplates();
+                    }
+                    applyFilters();
+                }
             }
         });
     }
 
     private void applyFilters() {
-        List<TemplateModel> filtered = new ArrayList<>();
+        runOnUiThread(() -> {
+            List<TemplateModel> filtered = new ArrayList<>();
 
-        for (TemplateModel item : allTemplates) {
-            boolean matchesLang = selectedLanguage.equalsIgnoreCase("All") ||
-                    selectedLanguage.equalsIgnoreCase(item.getLanguage());
-
-            boolean matchesCategory = selectedCategory.equalsIgnoreCase("All") ||
-                    selectedCategory.equalsIgnoreCase(item.getCategory());
-
-            if (matchesLang && matchesCategory) {
-                filtered.add(item);
+            if (allTemplates == null || allTemplates.isEmpty()) {
+                allTemplates = TemplateRepository.getDefaultFallbackTemplates();
             }
-        }
 
-        templateAdapter.setTemplates(filtered);
+            for (TemplateModel item : allTemplates) {
+                if (item == null) continue;
+                boolean matchesLang = selectedLanguage.equalsIgnoreCase("All") ||
+                        selectedLanguage.equalsIgnoreCase(item.getLanguage());
 
-        if (filtered.isEmpty()) {
-            binding.layoutEmptyState.setVisibility(View.VISIBLE);
-            binding.recyclerViewTemplates.setVisibility(View.GONE);
-        } else {
-            binding.layoutEmptyState.setVisibility(View.GONE);
-            binding.recyclerViewTemplates.setVisibility(View.VISIBLE);
-        }
+                boolean matchesCategory = selectedCategory.equalsIgnoreCase("All") ||
+                        selectedCategory.equalsIgnoreCase(item.getCategory());
+
+                if (matchesLang && matchesCategory) {
+                    filtered.add(item);
+                }
+            }
+
+            templateAdapter.setTemplates(filtered);
+            templateAdapter.notifyDataSetChanged();
+
+            if (filtered.isEmpty()) {
+                binding.layoutEmptyState.setVisibility(View.VISIBLE);
+                binding.recyclerViewTemplates.setVisibility(View.GONE);
+            } else {
+                binding.layoutEmptyState.setVisibility(View.GONE);
+                binding.recyclerViewTemplates.setVisibility(View.VISIBLE);
+            }
+        });
     }
 }

@@ -2,6 +2,8 @@ package com.utsavpost.maker.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,7 +76,9 @@ public class TemplateAdapter extends RecyclerView.Adapter<TemplateAdapter.Templa
 
     @Override
     public void onBindViewHolder(@NonNull TemplateViewHolder holder, int position) {
-        holder.bind(templateList.get(position));
+        if (position >= 0 && position < templateList.size()) {
+            holder.bind(templateList.get(position));
+        }
     }
 
     @Override
@@ -91,6 +95,8 @@ public class TemplateAdapter extends RecyclerView.Adapter<TemplateAdapter.Templa
         }
 
         void bind(TemplateModel template) {
+            if (template == null) return;
+
             // 1. Dynamic Gradient Background
             GradientDrawable gradient = new GradientDrawable(
                     GradientDrawable.Orientation.TOP_BOTTOM,
@@ -105,6 +111,8 @@ public class TemplateAdapter extends RecyclerView.Adapter<TemplateAdapter.Templa
                 binding.ivTemplateBg.setVisibility(View.VISIBLE);
                 Glide.with(context)
                         .load(imageUrl)
+                        .placeholder(new ColorDrawable(Color.TRANSPARENT))
+                        .error(new ColorDrawable(Color.TRANSPARENT))
                         .transform(new CenterCrop())
                         .into(binding.ivTemplateBg);
             } else {
@@ -152,4 +160,3 @@ public class TemplateAdapter extends RecyclerView.Adapter<TemplateAdapter.Templa
         }
     }
 }
-
