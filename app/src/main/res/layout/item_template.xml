@@ -1,218 +1,206 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardTemplate"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="260dp"
+    android:layout_margin="6dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="3dp"
+    app:strokeColor="#15000000"
+    app:strokeWidth="1dp">
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cardTemplate"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_margin="5dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?attr/selectableItemBackground"
-        app:cardCornerRadius="14dp"
-        app:cardElevation="3dp"
-        app:strokeColor="#15000000"
-        app:strokeWidth="1dp"
-        app:layout_constraintDimensionRatio="H,4:5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/posterContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/posterContainer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:minHeight="210dp">
+        <!-- Dynamic Gradient Background -->
+        <View
+            android:id="@+id/bgGradientView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <!-- Dynamic Gradient Background -->
-            <View
-                android:id="@+id/bgGradientView"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <!-- Optional Remote Background Image -->
+        <ImageView
+            android:id="@+id/ivTemplateBg"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:contentDescription="Poster Background"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <!-- Optional Remote Background Image -->
+        <!-- Scrim Overlay for Contrast -->
+        <View
+            android:id="@+id/scrimOverlay"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="#2E000000"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Title Badge (Top-Left) -->
+        <TextView
+            android:id="@+id/tvBadgeTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_badge_pill"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingStart="8dp"
+            android:paddingTop="3dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="3dp"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Diwali Wishes" />
+
+        <!-- Pro / Premium Badge (Top-Right) -->
+        <LinearLayout
+            android:id="@+id/badgePro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/bg_badge_pro"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="6dp"
+            android:paddingTop="2dp"
+            android:paddingEnd="6dp"
+            android:paddingBottom="2dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible">
+
             <ImageView
-                android:id="@+id/ivTemplateBg"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:contentDescription="Poster Background"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginEnd="3dp"
+                android:contentDescription="PRO"
+                android:src="@drawable/ic_pro_badge" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PRO"
+                android:textColor="#FFD700"
+                android:textSize="9sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- User Footer Strip (Pinned to Bottom) -->
+        <LinearLayout
+            android:id="@+id/layoutUserFooter"
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+            android:background="#E6FFFFFF"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <!-- User Circular Photo -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivUserPhoto"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:scaleType="centerCrop"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:src="@drawable/ic_person_placeholder"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+                app:strokeColor="@color/primary"
+                app:strokeWidth="1dp" />
 
-            <!-- Scrim Overlay for Contrast -->
-            <View
-                android:id="@+id/scrimOverlay"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:background="#2E000000"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <!-- Title Badge (Top-Left) -->
-            <TextView
-                android:id="@+id/tvBadgeTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/bg_badge_pill"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:paddingStart="8dp"
-                android:paddingTop="3dp"
-                android:paddingEnd="8dp"
-                android:paddingBottom="3dp"
-                android:textColor="@color/white"
-                android:textSize="10sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="Diwali Wishes" />
-
-            <!-- Pro / Premium Badge (Top-Right) -->
+            <!-- User Details -->
             <LinearLayout
-                android:id="@+id/badgePro"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/bg_badge_pro"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingStart="6dp"
-                android:paddingTop="2dp"
-                android:paddingEnd="6dp"
-                android:paddingBottom="2dp"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:visibility="visible">
-
-                <ImageView
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
-                    android:layout_marginEnd="3dp"
-                    android:contentDescription="PRO"
-                    android:src="@drawable/ic_pro_badge" />
+                android:layout_marginStart="5dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tvUserName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="PRO"
-                    android:textColor="#FFD700"
-                    android:textSize="9sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="#1F1A16"
+                    android:textSize="9.5sp"
+                    android:textStyle="bold"
+                    tools:text="आपका नाम यहाँ" />
 
-            <!-- User Footer Strip (Pinned to Bottom) -->
-            <LinearLayout
-                android:id="@+id/layoutUserFooter"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:background="#E6FFFFFF"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingStart="6dp"
-                android:paddingEnd="6dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <!-- User Circular Photo -->
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/ivUserPhoto"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_person_placeholder"
-                    app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
-                    app:strokeColor="@color/primary"
-                    app:strokeWidth="1dp" />
-
-                <!-- User Details -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tvUserName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:textColor="#1F1A16"
-                        android:textSize="9sp"
-                        android:textStyle="bold"
-                        tools:text="आपका नाम यहाँ" />
-
-                    <TextView
-                        android:id="@+id/tvUserDesignation"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:textColor="#FF6D00"
-                        android:textSize="7.5sp"
-                        android:textStyle="bold"
-                        tools:text="समाजसेवी / युवा नेता" />
-                </LinearLayout>
-
-                <!-- Mini App Stamp / Watermark -->
                 <TextView
+                    android:id="@+id/tvUserDesignation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:alpha="0.6"
-                    android:text="UtsavPost"
-                    android:textColor="#53433B"
-                    android:textSize="7sp"
-                    android:textStyle="bold|italic" />
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="#FF6D00"
+                    android:textSize="7.5sp"
+                    android:textStyle="bold"
+                    tools:text="समाजसेवी / युवा नेता" />
             </LinearLayout>
 
-            <!-- Quote / Festive Message (Centered between Title Badge and Footer) -->
+            <!-- Mini App Stamp / Watermark -->
             <TextView
-                android:id="@+id/tvQuote"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="6dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="6dp"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:lineSpacingExtra="2dp"
-                android:maxLines="5"
-                android:shadowColor="#80000000"
-                android:shadowDx="1"
-                android:shadowDy="2"
-                android:shadowRadius="3"
-                android:textColor="@color/white"
-                android:textSize="11.5sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@id/layoutUserFooter"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvBadgeTitle"
-                tools:text="दीपों का यह पावन त्योहार,\nआपके जीवन में लाए खुशियों की बहार।\nशुभ दीपावली!" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:alpha="0.6"
+                android:text="UtsavPost"
+                android:textColor="#53433B"
+                android:textSize="7sp"
+                android:textStyle="bold|italic" />
+        </LinearLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- Quote / Festive Message (Centered between Title Badge and Footer) -->
+        <TextView
+            android:id="@+id/tvQuote"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="6dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:lineSpacingExtra="2dp"
+            android:maxLines="5"
+            android:shadowColor="#80000000"
+            android:shadowDx="1"
+            android:shadowDy="2"
+            android:shadowRadius="3"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/layoutUserFooter"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvBadgeTitle"
+            tools:text="दीपों का यह पावन त्योहार,\nआपके जीवन में लाए खुशियों की बहार।\nशुभ दीपावली!" />
 
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

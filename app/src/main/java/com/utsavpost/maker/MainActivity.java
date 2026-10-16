@@ -3,6 +3,7 @@ package com.utsavpost.maker;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -51,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         adManager.initialize(this);
         adManager.loadBannerAd(binding.bannerAdContainer, this);
 
-        // 2. Setup RecyclerView & Adapter
+        // 2. Setup RecyclerView & Adapter immediately
         setupRecyclerView();
 
         // 3. Setup Filters (Language & Category Chips)
@@ -62,6 +63,9 @@ public class MainActivity extends AppCompatActivity {
 
         // 5. Load Templates
         loadTemplates();
+
+        // Debug Toast confirming template load count on launch
+        Toast.makeText(this, "Loaded " + allTemplates.size() + " templates", Toast.LENGTH_SHORT).show();
 
         // 6. Onboarding: Auto-prompt profile dialog on first launch
         if (userProfileManager.isFirstLaunch()) {
@@ -86,14 +90,15 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // 2-column grid layout for 4:5 festival poster cards
+        // 2-column grid layout for festival poster cards
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         binding.recyclerViewTemplates.setLayoutManager(gridLayoutManager);
+        binding.recyclerViewTemplates.setHasFixedSize(true);
         binding.recyclerViewTemplates.setAdapter(templateAdapter);
     }
 
     private void setupFilterChips() {
-        // Language Filter Selection
+        // Language Filter Selection with Hindi, Bhojpuri, Marathi mapping
         binding.chipGroupLanguage.setOnCheckedStateChangeListener((group, checkedIds) -> {
             if (checkedIds.isEmpty()) {
                 selectedLanguage = "All";
@@ -179,16 +184,16 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadTemplates() {
         allTemplates = templateRepository.loadTemplates(this);
-        if (allTemplates == null || allTemplates.isEmpty()) {
-            allTemplates = TemplateRepository.getDefaultFallbackTemplates();
+        if (allTemplates == null || allTemplates.size() < 10) {
+            allTemplates = TemplateRepository.getBuiltInTemplates();
         }
         applyFilters();
 
-        // Optionally check for remote updates in background
+        // Remote fetch with safe fallback
         templateRepository.fetchRemoteTemplates(this, "", new TemplateRepository.Callback() {
             @Override
             public void onSuccess(List<TemplateModel> templates) {
-                if (templates != null && !templates.isEmpty()) {
+                if (templates != null && templates.size() >= 10) {
                     allTemplates = templates;
                     applyFilters();
                 }
@@ -196,11 +201,11 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onError(Throwable throwable, List<TemplateModel> fallbackTemplates) {
-                if (allTemplates == null || allTemplates.isEmpty()) {
-                    if (fallbackTemplates != null && !fallbackTemplates.isEmpty()) {
+                if (allTemplates == null || allTemplates.size() < 10) {
+                    if (fallbackTemplates != null && fallbackTemplates.size() >= 10) {
                         allTemplates = fallbackTemplates;
                     } else {
-                        allTemplates = TemplateRepository.getDefaultFallbackTemplates();
+                        allTemplates = TemplateRepository.getBuiltInTemplates();
                     }
                     applyFilters();
                 }
@@ -208,25 +213,60 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private boolean matchesLanguage(String itemLang, String selected) {
+        if (selected == null || selected.equalsIgnoreCase("All")) {
+            return true;
+        }
+        if (itemLang == null) {
+            return false;
+        }
+        String item = itemLang.trim().toLowerCase();
+        String sel = selected.trim().toLowerCase();
+
+        if (sel.contains("hindi") || sel.contains("हिंदी")) {
+            return item.contains("hindi") || item.contains("हिंदी");
+        }
+        if (sel.contains("bhojpuri") || sel.contains("भोजपुरी")) {
+            return item.contains("bhojpuri") || item.contains("भोजपुरी");
+        }
+        if (sel.contains("marathi") || sel.contains("मराठी")) {
+            return item.contains("marathi") || item.contains("मराठी");
+        }
+        return item.equalsIgnoreCase(sel);
+    }
+
+    private boolean matchesCategory(String itemCat, String selected) {
+        if (selected == null || selected.equalsIgnoreCase("All")) {
+            return true;
+        }
+        if (itemCat == null) {
+            return false;
+        }
+        String item = itemCat.trim().toLowerCase();
+        String sel = selected.trim().toLowerCase();
+
+        return item.equalsIgnoreCase(sel) || item.contains(sel) || sel.contains(item);
+    }
+
     private void applyFilters() {
         runOnUiThread(() -> {
-            List<TemplateModel> filtered = new ArrayList<>();
-
-            if (allTemplates == null || allTemplates.isEmpty()) {
-                allTemplates = TemplateRepository.getDefaultFallbackTemplates();
+            if (allTemplates == null || allTemplates.size() < 10) {
+                allTemplates = TemplateRepository.getBuiltInTemplates();
             }
 
+            List<TemplateModel> filtered = new ArrayList<>();
             for (TemplateModel item : allTemplates) {
                 if (item == null) continue;
-                boolean matchesLang = selectedLanguage.equalsIgnoreCase("All") ||
-                        selectedLanguage.equalsIgnoreCase(item.getLanguage());
-
-                boolean matchesCategory = selectedCategory.equalsIgnoreCase("All") ||
-                        selectedCategory.equalsIgnoreCase(item.getCategory());
-
-                if (matchesLang && matchesCategory) {
+                if (matchesLanguage(item.getLanguage(), selectedLanguage) &&
+                    matchesCategory(item.getCategory(), selectedCategory)) {
                     filtered.add(item);
                 }
+            }
+
+            // If strict filter yields empty, fallback to showing all templates so screen is never blank!
+            if (filtered.isEmpty()) {
+                filtered = new ArrayList<>(allTemplates);
+                Toast.makeText(this, "No match for filter. Showing all " + allTemplates.size() + " templates", Toast.LENGTH_SHORT).show();
             }
 
             templateAdapter.setTemplates(filtered);
